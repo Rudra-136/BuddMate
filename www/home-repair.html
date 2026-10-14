@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Home Services | BuddMate</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <!-- PWA Requirements -->
+  <link rel="manifest" href="manifest.json">
+  <script>
+    if ('serviceWorker' in navigator) { navigator.serviceWorker.register('sw.js'); }
+    tailwind.config = { theme: { extend: { fontFamily: { sans: ['Outfit', 'sans-serif'] }, colors: { brand: { orange: '#EA580C', dark: '#0F172A' } } } } }
+  </script>
+</head>
+<body class="bg-[#FBFBFE] text-slate-800 font-sans antialiased min-h-screen flex flex-col">
+  
+  <header class="px-6 py-6 flex items-center justify-between sticky top-0 bg-[#FBFBFE]/90 backdrop-blur-md z-20">
+    <a href="dashboard.html" class="text-slate-500 hover:text-slate-900 transition flex items-center">
+      <svg class="w-6 h-6 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+      <span class="text-sm font-semibold">Back</span>
+    </a>
+    <h1 class="text-lg font-bold text-slate-900 absolute left-1/2 -translate-x-1/2">Home Services</h1>
+    <div class="w-10"></div>
+  </header>
+
+  <main class="px-6 py-4 flex-grow pb-24 max-w-2xl mx-auto w-full">
+    
+    <!-- FIREBASE FORM (IDs Added) -->
+    <form id="repairForm" class="space-y-6">
+      
+      <!-- Expanded Service Selection Grid -->
+      <div>
+        <label class="block text-xs font-medium text-slate-600 uppercase tracking-wider mb-3">1. Select Required Service</label>
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+          
+          <label class="service-card cursor-pointer border-2 border-orange-500 bg-orange-50/30 rounded-2xl p-3 text-center block transition">
+            <input type="radio" name="repair_type" value="Electrician" class="sr-only" checked onchange="updateServiceSelection()" />
+            <span class="text-2xl block mb-1">⚡</span>
+            <span class="font-semibold text-[11px] uppercase tracking-wide">Electrician</span>
+          </label>
+          
+          <label class="service-card cursor-pointer border-2 border-slate-200 rounded-2xl p-3 text-center block transition hover:border-brand-orange">
+            <input type="radio" name="repair_type" value="Plumber" class="sr-only" onchange="updateServiceSelection()" />
+            <span class="text-2xl block mb-1">🚰</span>
+            <span class="font-semibold text-[11px] uppercase tracking-wide">Plumber</span>
+          </label>
+          
+          <label class="service-card cursor-pointer border-2 border-slate-200 rounded-2xl p-3 text-center block transition hover:border-brand-orange">
+            <input type="radio" name="repair_type" value="AC/Appliances" class="sr-only" onchange="updateServiceSelection()" />
+            <span class="text-2xl block mb-1">❄️</span>
+            <span class="font-semibold text-[11px] uppercase tracking-wide">Appliances</span>
+          </label>
+          
+          <label class="service-card cursor-pointer border-2 border-slate-200 rounded-2xl p-3 text-center block transition hover:border-brand-orange">
+            <input type="radio" name="repair_type" value="Handyman" class="sr-only" onchange="updateServiceSelection()" />
+            <span class="text-2xl block mb-1">🔨</span>
+            <span class="font-semibold text-[11px] uppercase tracking-wide">Handyman</span>
+          </label>
+
+          <label class="service-card cursor-pointer border-2 border-slate-200 rounded-2xl p-3 text-center block transition hover:border-brand-orange">
+            <input type="radio" name="repair_type" value="Cook/Chef" class="sr-only" onchange="updateServiceSelection()" />
+            <span class="text-2xl block mb-1">🍳</span>
+            <span class="font-semibold text-[11px] uppercase tracking-wide">Cook / Chef</span>
+          </label>
+
+          <label class="service-card cursor-pointer border-2 border-slate-200 rounded-2xl p-3 text-center block transition hover:border-brand-orange">
+            <input type="radio" name="repair_type" value="Deep Cleaning" class="sr-only" onchange="updateServiceSelection()" />
+            <span class="text-2xl block mb-1">🧹</span>
+            <span class="font-semibold text-[11px] uppercase tracking-wide">Cleaning</span>
+          </label>
+
+          <label class="service-card cursor-pointer border-2 border-slate-200 rounded-2xl p-3 text-center block transition hover:border-brand-orange">
+            <input type="radio" name="repair_type" value="Gardener" class="sr-only" onchange="updateServiceSelection()" />
+            <span class="text-2xl block mb-1">🪴</span>
+            <span class="font-semibold text-[11px] uppercase tracking-wide">Gardener</span>
+          </label>
+
+          <label class="service-card cursor-pointer border-2 border-slate-200 rounded-2xl p-3 text-center block transition hover:border-brand-orange">
+            <input type="radio" name="repair_type" value="Other Service" class="sr-only" onchange="updateServiceSelection()" />
+            <span class="text-2xl block mb-1">📝</span>
+            <span class="font-semibold text-[11px] uppercase tracking-wide">Anything Else</span>
+          </label>
+        </div>
+      </div>
+
+      <!-- Details with Voice Input -->
+      <div class="bg-white rounded-3xl p-6 border border-slate-100 shadow-sm mt-4">
+        <label class="block text-xs font-medium text-slate-600 uppercase tracking-wider mb-2">2. Describe the Requirements</label>
+        <div class="relative">
+          <textarea id="issue_description" rows="4" placeholder="e.g. Need a cook for 3 days starting Monday, or AC is leaking water..." class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-brand-orange/40 text-sm bg-slate-50/50 pr-12" required></textarea>
+          
+          <!-- VOICE RECORDING BUTTON -->
+          <button type="button" onclick="startDictation('issue_description')" class="absolute bottom-3 right-3 w-10 h-10 bg-orange-100 text-brand-orange rounded-full flex items-center justify-center hover:bg-brand-orange hover:text-white transition shadow-sm">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"></path></svg>
+          </button>
+        </div>
+        <p class="text-[10px] text-slate-400 mt-1 pl-1">Tap the microphone to speak your issue in English or Hindi.</p>
+      </div>
+
+      <!-- Contact Details -->
+      <div class="bg-white rounded-3xl p-6 border border-slate-100 shadow-sm">
+        <label class="block text-xs font-medium text-slate-600 uppercase tracking-wider mb-4">3. Contact Details</label>
+        <div class="space-y-4">
+          <input type="tel" id="contact_number" placeholder="Parent's Phone number" class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-brand-orange/40 text-sm bg-slate-50/50" required />
+          <input type="text" id="repair_address" placeholder="Complete Home Address" class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-brand-orange/40 text-sm bg-slate-50/50" required />
+        </div>
+      </div>
+
+      <button type="submit" id="submitRepairBtn" class="w-full py-4 rounded-full bg-slate-900 hover:bg-brand-orange text-white font-medium shadow-md transition-all duration-300">
+        Request Professional
+      </button>
+    </form>
+  </main>
+
+  <!-- Script to handle visual highlights of the service grid -->
+  <script>
+    function updateServiceSelection() {
+      const labels = document.querySelectorAll('.service-card');
+      const activeStyle = "service-card cursor-pointer border-2 border-orange-500 bg-orange-50/30 rounded-2xl p-3 text-center block transition";
+      const inactiveStyle = "service-card cursor-pointer border-2 border-slate-200 rounded-2xl p-3 text-center block transition hover:border-brand-orange";
+
+      labels.forEach(label => {
+        const radio = label.querySelector('input[type="radio"]');
+        if (radio.checked) {
+          label.className = activeStyle;
+        } else {
+          label.className = inactiveStyle;
+        }
+      });
+    }
+
+    // Voice Recognition Logic
+    function startDictation(targetId) {
+      if (window.hasOwnProperty('webkitSpeechRecognition')) {
+        const recognition = new webkitSpeechRecognition();
+        recognition.continuous = false;
+        recognition.interimResults = false;
+        recognition.lang = "en-IN"; 
+        
+        const btn = event.currentTarget;
+        const originalHtml = btn.innerHTML;
+        btn.innerHTML = `<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-orange-400 opacity-75"></span><svg class="w-5 h-5 relative" fill="currentColor" viewBox="0 0 24 24"><path d="M12 14c1.66 0 2.99-1.34 2.99-3L15 5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"/></svg>`;
+        btn.classList.add('bg-brand-orange', 'text-white');
+
+        recognition.start();
+
+        recognition.onresult = function(e) {
+          document.getElementById(targetId).value += e.results[0][0].transcript + " ";
+          resetButton(btn, originalHtml);
+          recognition.stop();
+        };
+
+        recognition.onerror = function(e) {
+          resetButton(btn, originalHtml);
+          recognition.stop();
+          alert("Could not hear clearly. Please try again or type.");
+        }
+      } else {
+        alert("Voice recognition is not supported in this browser. Please use Chrome or Android.");
+      }
+    }
+
+    function resetButton(btn, html) {
+      btn.innerHTML = html;
+      btn.classList.remove('bg-brand-orange', 'text-white');
+    }
+  </script>
+
+  <!-- FIREBASE DATABASE INTEGRATION -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/13.0.0/firebase-app.js";
+    import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/13.0.0/firebase-firestore.js";
+
+    // Your exact BuddMate Firebase config
+    const firebaseConfig = {
+      apiKey: "AIzaSyBfwhd5KfU-3NYelo_-Ys4IzxT8ZfXhoRI",
+      authDomain: "buddmate.firebaseapp.com",
+      projectId: "buddmate",
+      storageBucket: "buddmate.firebasestorage.app",
+      messagingSenderId: "329743289349",
+      appId: "1:329743289349:web:0e060cd9a7ea9e5647a06c",
+      measurementId: "G-PTPYJLMN3S"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    document.getElementById('repairForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const btn = document.getElementById('submitRepairBtn');
+      btn.innerHTML = "Submitting Request... 🔄"; 
+      btn.classList.add('opacity-75', 'cursor-not-allowed');
+
+      try {
+        const selectedService = document.querySelector('input[name="repair_type"]:checked').value;
+        const description = document.getElementById('issue_description').value;
+        const phone = document.getElementById('contact_number').value;
+        const address = document.getElementById('repair_address').value;
+
+        // Save to Firestore "repairs" table
+        await addDoc(collection(db, "repairs"), {
+          serviceType: selectedService,
+          issueDescription: description,
+          contactPhone: phone,
+          homeAddress: address,
+          status: "Finding Professional",
+          createdAt: serverTimestamp()
+        });
+
+        // Success! Redirect to Dashboard
+        window.location.href = "dashboard.html";
+        
+      } catch (error) {
+        console.error(error); 
+        alert("Failed to submit request. Please check your database settings.");
+        btn.innerHTML = "Request Professional"; 
+        btn.classList.remove('opacity-75', 'cursor-not-allowed');
+      }
+    });
+  </script>
+</body>
+</html>

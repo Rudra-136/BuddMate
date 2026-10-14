@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Book a Budd | BuddMate</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <!-- PWA Requirements -->
+  <link rel="manifest" href="manifest.json">
+  <script>
+    if ('serviceWorker' in navigator) { navigator.serviceWorker.register('sw.js'); }
+  </script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Outfit', 'sans-serif'] },
+          colors: {
+            brand: { orange: '#EA580C', dark: '#0F172A', cream: '#FFFBF7', soft: '#F8FAFC' }
+          }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="bg-[#FBFBFE] text-slate-800 font-sans antialiased min-h-screen flex flex-col justify-between">
+  
+  <!-- Navigation Header -->
+  <header class="max-w-6xl mx-auto w-full px-6 py-6 flex items-center justify-between">
+    <a href="index.html" class="flex items-center space-x-2 text-2xl font-bold tracking-tight text-slate-900">
+      <span>Budd<span class="text-brand-orange">Mate</span></span>
+    </a>
+    <div class="flex items-center space-x-4">
+      <a href="register.html" class="text-sm font-medium text-slate-600 hover:text-slate-900 transition">Register</a>
+      <a href="book-medicine.html" class="text-sm font-medium text-slate-600 hover:text-slate-900 transition">Order Medicines</a>
+    </div>
+  </header>
+
+  <!-- Main Booking Content -->
+  <main class="max-w-4xl mx-auto w-full px-6 py-8 flex-grow">
+    <!-- Hero / Headline -->
+    <div class="mb-10 text-center">
+      <span class="inline-flex items-center px-3.5 py-1 rounded-full text-xs font-semibold bg-orange-100 text-brand-orange uppercase tracking-wide mb-3">
+        Verified Ground Care
+      </span>
+      <h1 class="text-3xl sm:text-4xl font-bold text-slate-900 tracking-tight">Reserve a Caring Companion</h1>
+      <p class="text-slate-500 mt-2 max-w-xl mx-auto text-base">
+        A trustworthy, thoroughly verified local Budd to accompany your parents for doctor visits, bank visits, or day-to-day check-ins.
+      </p>
+    </div>
+
+    <!-- FORM START: Firebase Integration (IDs added) -->
+    <form id="bookingForm" class="space-y-8">
+      
+      <!-- Section 1: Companion Type -->
+      <section class="bg-white border border-slate-200/80 rounded-3xl p-6 sm:p-8 shadow-sm">
+        <h2 class="text-lg font-semibold text-slate-900 mb-4 flex items-center space-x-2">
+          <span>1. Select Companion Requirement</span>
+        </h2>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <!-- Card 1 -->
+          <label id="card_medical" class="cursor-pointer border-2 border-orange-500 bg-orange-50/30 rounded-2xl p-5 block transition hover:border-brand-orange">
+            <input type="radio" name="service_tier" value="Doctor Visit" class="sr-only" checked onchange="updateServiceSelection()" />
+            <div class="flex items-center justify-between mb-3">
+              <span class="text-2xl">🩺</span>
+              <span class="text-xs font-semibold bg-orange-200 text-orange-800 px-2 py-0.5 rounded-full">Popular</span>
+            </div>
+            <h3 class="font-semibold text-slate-900 text-base">Medical & Doctor Escort</h3>
+            <p class="text-xs text-slate-500 mt-1">OPD queue assistance, lab report collection, and safe transport escort.</p>
+          </label>
+
+          <!-- Card 2 -->
+          <label id="card_errands" class="cursor-pointer border-2 border-slate-200 rounded-2xl p-5 block transition hover:border-brand-orange">
+            <input type="radio" name="service_tier" value="Daily Errands" class="sr-only" onchange="updateServiceSelection()" />
+            <div class="flex items-center justify-between mb-3">
+              <span class="text-2xl">🛒</span>
+            </div>
+            <h3 class="font-semibold text-slate-900 text-base">Daily Errands & Outdoor</h3>
+            <p class="text-xs text-slate-500 mt-1">Bank errands, pensions, market purchases, and light neighborhood tasks.</p>
+          </label>
+
+          <!-- Card 3 -->
+          <label id="card_checkin" class="cursor-pointer border-2 border-slate-200 rounded-2xl p-5 block transition hover:border-brand-orange">
+            <input type="radio" name="service_tier" value="Home Check-in" class="sr-only" onchange="updateServiceSelection()" />
+            <div class="flex items-center justify-between mb-3">
+              <span class="text-2xl">🤝</span>
+            </div>
+            <h3 class="font-semibold text-slate-900 text-base">Home Check-in & Care</h3>
+            <p class="text-xs text-slate-500 mt-1">A friendly check-in, smartphone tech support, and wellness updates sent to you.</p>
+          </label>
+        </div>
+      </section>
+
+      <!-- Script to handle visual highlights -->
+      <script>
+        function updateServiceSelection() {
+          const activeStyle = "cursor-pointer border-2 border-orange-500 bg-orange-50/30 rounded-2xl p-5 block transition hover:border-brand-orange";
+          const inactiveStyle = "cursor-pointer border-2 border-slate-200 rounded-2xl p-5 block transition hover:border-brand-orange";
+
+          // Check which radio is currently selected
+          const isMedical = document.querySelector('input[value="Doctor Visit"]').checked;
+          const isErrands = document.querySelector('input[value="Daily Errands"]').checked;
+          const isCheckin = document.querySelector('input[value="Home Check-in"]').checked;
+
+          // Apply styles dynamically
+          document.getElementById('card_medical').className = isMedical ? activeStyle : inactiveStyle;
+          document.getElementById('card_errands').className = isErrands ? activeStyle : inactiveStyle;
+          document.getElementById('card_checkin').className = isCheckin ? activeStyle : inactiveStyle;
+        }
+      </script>
+      <!-- Section 2: Details & Schedule -->
+      <section class="bg-white border border-slate-200/80 rounded-3xl p-6 sm:p-8 shadow-sm">
+        <h2 class="text-lg font-semibold text-slate-900 mb-6">2. Visit Details & Schedule</h2>
+        
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+          <div>
+            <label class="block text-xs font-medium text-slate-600 uppercase tracking-wider mb-2">Parent / Elder Name</label>
+            <input type="text" id="parent_name" placeholder="e.g. Ramesh Chandra Sharma" class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-brand-orange/40 focus:border-brand-orange transition text-sm bg-slate-50/50" required />
+          </div>
+
+          <div>
+            <label class="block text-xs font-medium text-slate-600 uppercase tracking-wider mb-2">Parent Contact Phone</label>
+            <input type="tel" id="parent_phone" placeholder="+91 98765 43210" class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-brand-orange/40 focus:border-brand-orange transition text-sm bg-slate-50/50" required />
+          </div>
+
+          <div class="sm:col-span-2">
+            <label class="block text-xs font-medium text-slate-600 uppercase tracking-wider mb-2">Residential Address / City</label>
+            <input type="text" id="address" placeholder="House / Flat No., Landmark, City (e.g. Bhubaneswar)" class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-brand-orange/40 focus:border-brand-orange transition text-sm bg-slate-50/50" required />
+          </div>
+
+          <div>
+            <label class="block text-xs font-medium text-slate-600 uppercase tracking-wider mb-2">Visit Date</label>
+            <input type="date" id="visit_date" class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-brand-orange/40 focus:border-brand-orange transition text-sm bg-slate-50/50" required />
+          </div>
+
+          <div>
+            <label class="block text-xs font-medium text-slate-600 uppercase tracking-wider mb-2">Preferred Time Slot</label>
+            <select id="time_slot" class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-brand-orange/40 focus:border-brand-orange transition text-sm bg-slate-50/50">
+              <option value="Morning">Morning (08:30 AM - 11:30 AM)</option>
+              <option value="Afternoon">Afternoon (12:00 PM - 03:00 PM)</option>
+              <option value="Evening">Evening (04:00 PM - 07:00 PM)</option>
+            </select>
+          </div>
+
+          <div class="sm:col-span-2">
+            <label class="block text-xs font-medium text-slate-600 uppercase tracking-wider mb-2">Specific Instructions or Medical Notes</label>
+            <textarea id="instructions" rows="3" placeholder="Wheelchair required, needs assistance walking up stairs, doctor's appointment slip ready..." class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-brand-orange/40 focus:border-brand-orange transition text-sm bg-slate-50/50"></textarea>
+          </div>
+        </div>
+      </section>
+
+      <!-- Submit Action -->
+      <div class="flex flex-col sm:flex-row items-center justify-between gap-4 pt-2">
+        <div class="text-xs text-slate-500 text-center sm:text-left">
+          🛡️ Includes background-verified staff & live GPS location updates during the visit.
+        </div>
+        <button type="submit" id="submitBtn" class="w-full sm:w-auto px-8 py-3.5 rounded-full bg-slate-900 hover:bg-brand-orange text-white font-medium text-sm transition-all duration-200 shadow-md hover:shadow-lg">
+          Confirm & Match a Budd
+        </button>
+      </div>
+    </form>
+  </main>
+
+  <footer class="max-w-6xl mx-auto w-full px-6 py-6 border-t border-slate-100 text-xs text-slate-400 flex justify-between items-center mt-12">
+    <span>© BuddMate. European Gold Standards in Elder Assistance.</span>
+    <span>BuddMate Hai Na!</span>
+  </footer>
+
+  <!-- FIREBASE DATABASE INTEGRATION -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/13.0.0/firebase-app.js";
+    import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/13.0.0/firebase-firestore.js";
+
+    // Your exact BuddMate Firebase config
+    const firebaseConfig = {
+      apiKey: "AIzaSyBfwhd5KfU-3NYelo_-Ys4IzxT8ZfXhoRI",
+      authDomain: "buddmate.firebaseapp.com",
+      projectId: "buddmate",
+      storageBucket: "buddmate.firebasestorage.app",
+      messagingSenderId: "329743289349",
+      appId: "1:329743289349:web:0e060cd9a7ea9e5647a06c",
+      measurementId: "G-PTPYJLMN3S"
+    };
+
+    // Initialize App and Database
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    // Handle Form Submission
+    document.getElementById('bookingForm').addEventListener('submit', async (e) => {
+      e.preventDefault(); // Stop page from refreshing
+      
+      const btn = document.getElementById('submitBtn');
+      btn.innerHTML = "Booking... 🔄";
+      btn.classList.add('opacity-75', 'cursor-not-allowed');
+
+      try {
+        // Find which radio button is selected (Medical, Errands, or Check-in)
+        const selectedService = document.querySelector('input[name="service_tier"]:checked').value;
+
+        // Collect Data from the HTML form using IDs
+        const name = document.getElementById('parent_name').value;
+        const phone = document.getElementById('parent_phone').value;
+        const address = document.getElementById('address').value;
+        const date = document.getElementById('visit_date').value;
+        const time = document.getElementById('time_slot').value;
+        const notes = document.getElementById('instructions').value;
+
+        // Save to Firestore "bookings" table
+        await addDoc(collection(db, "bookings"), {
+          serviceType: selectedService,
+          parentName: name,
+          parentPhone: phone,
+          address: address,
+          visitDate: date,
+          timeSlot: time,
+          instructions: notes,
+          status: "Pending",
+          createdAt: serverTimestamp()
+        });
+
+        // Success! Redirect back to dashboard
+        window.location.href = "dashboard.html"; 
+        
+      } catch (error) {
+        console.error("Error adding document: ", error);
+        alert("Error saving booking. Check your Firebase Test Mode rules.");
+        btn.innerHTML = "Confirm & Match a Budd";
+        btn.classList.remove('opacity-75', 'cursor-not-allowed');
+      }
+    });
+  </script>
+</body>
+</html>
